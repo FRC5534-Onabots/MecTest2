@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID;
+
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   private MecanumDrive m_robotDrive;
 
   private GenericHID m_controllerDriver;
-  private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
+  //private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
   //private Joystick m_controllerDriver;
 
   @Override
