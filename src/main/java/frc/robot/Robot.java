@@ -7,9 +7,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
 //import edu.wpi.first.wpilibj.Talon;// <-- Removed becuase this version of Talon uses PWM, instead of CAN.
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID;
+
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 
@@ -26,10 +31,13 @@ public class Robot extends TimedRobot {
   private static final int kRearRightChannel = 0;
 
   // What ever USB port we have the controller plugged into.
-  private static final int kJoystickChannel = 0;
+  private static final int kGamePadChannel = 0;
 
   private MecanumDrive m_robotDrive;
-  private Joystick m_stick;
+
+  private GenericHID m_controllerDriver;
+  private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
+  //private Joystick m_controllerDriver;
 
   @Override
   public void robotInit() {
@@ -47,7 +55,10 @@ public class Robot extends TimedRobot {
 
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
-    m_stick = new Joystick(kJoystickChannel);
+    // m_controllerDriver = new Joystick(kJoystickChannel);
+    
+    m_controllerDriver = new XboxController(kGamePadChannel);
+  
   }
 
   @Override
@@ -55,6 +66,13 @@ public class Robot extends TimedRobot {
     // Use the joystick X axis for lateral movement, Y axis for forward
     // movement, and Z axis for rotation.
     
-    m_robotDrive.driveCartesian(m_stick.getX(), m_stick.getY(),m_stick.getZ(), 0.0);
+    // This line needs to be tweaked to work with xbox controller thumb sticks.
+    //m_robotDrive.driveCartesian(m_controllerDriver.getX(), m_controllerDriver.getY(),m_controllerDriver.getZ(), 0.0);
+
+    // If I did this right, this should allow for direction of travel to be set by using the left joystick
+    // while the rotation of the robot is set by the right stick on the controller.
+    m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
+                                m_controllerDriver.getRawAxis(0), 
+                                m_controllerDriver.getRawAxis(4));
   }
 }
