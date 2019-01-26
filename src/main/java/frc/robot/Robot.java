@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
  * class.  It's been modifed to call the WPI_TalonSRX controllers, which use the can bus, 
@@ -33,9 +34,22 @@ public class Robot extends TimedRobot {
   // What ever USB port we have the controller plugged into.
   private static final int kGamePadChannel = 0;
 
+  //Lets map out the buttons
+    private static final int kXboxButtonA = 1;
+    private static final int kXboxButtonB = 2;
+    private static final int kXboxButtonX = 3;
+    private static final int kXboxButtonY = 4;
+
+    private static final int kXboxButtonLB = 5;
+    private static final int kXboxButtonRB = 6;
+    private static final int kXboxButtonLT = 2;
+    private static final int kXboxButtonRT = 3;
+
+
   private MecanumDrive m_robotDrive;
 
   private GenericHID m_controllerDriver;
+
   //private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
   //private Joystick m_controllerDriver;
 
@@ -60,6 +74,7 @@ public class Robot extends TimedRobot {
     m_controllerDriver = new XboxController(kGamePadChannel);
   
   }
+  
 
   @Override
   public void teleopPeriodic() {
@@ -74,5 +89,15 @@ public class Robot extends TimedRobot {
     m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
-  }
+
+    // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
+  /*
+    if (m_controllerDriver.getRawButton(kXboxButtonA) == true) {
+
+      
+      // Attempt to display boolean value on dashboard
+      SmartDashboard.putNumber( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
+     
+  */
+    }
 }
