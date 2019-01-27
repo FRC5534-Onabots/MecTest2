@@ -36,15 +36,15 @@ public class Robot extends TimedRobot {
   private static final int kGamePadChannel = 0;
 
   //Lets map out the buttons
-    private static final int kXboxButtonA = 1;
-    private static final int kXboxButtonB = 2;
-    private static final int kXboxButtonX = 3;
-    private static final int kXboxButtonY = 4;
+  private static final int kXboxButtonA = 1;
+  private static final int kXboxButtonB = 2;
+  private static final int kXboxButtonX = 3;
+  private static final int kXboxButtonY = 4;
 
-    private static final int kXboxButtonLB = 5;
-    private static final int kXboxButtonRB = 6;
-    private static final int kXboxButtonLT = 2;
-    private static final int kXboxButtonRT = 3;
+  private static final int kXboxButtonLB = 5;
+  private static final int kXboxButtonRB = 6;
+  private static final int kXboxButtonLT = 2;
+  private static final int kXboxButtonRT = 3;
 
 
   private MecanumDrive m_robotDrive;
@@ -54,14 +54,16 @@ public class Robot extends TimedRobot {
   //private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
   //private Joystick m_controllerDriver;
 
+  /**
+   * This function if called when the robot boots up.
+   * It creates the objects that are called by the other robot functions.
+   */
   @Override
   public void robotInit() {
     WPI_TalonSRX frontLeftTalonSRX = new WPI_TalonSRX(kFrontLeftChannel);
     WPI_TalonSRX frontRightTalonSRX = new WPI_TalonSRX(kFrontRightChannel);
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
-
-
 
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
@@ -74,16 +76,13 @@ public class Robot extends TimedRobot {
     
     m_controllerDriver = new XboxController(kGamePadChannel);
   
-  }
+  } // *********************** End of roboInit **********************************
   
-
+  /**
+   * When in teleop this function is called periodicly
+   */
   @Override
   public void teleopPeriodic() {
-    // Use the joystick X axis for lateral movement, Y axis for forward
-    // movement, and Z axis for rotation.
-    
-    // This line needs to be tweaked to work with xbox controller thumb sticks.
-    //m_robotDrive.driveCartesian(m_controllerDriver.getX(), m_controllerDriver.getY(),m_controllerDriver.getZ(), 0.0);
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
@@ -91,7 +90,7 @@ public class Robot extends TimedRobot {
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
 
-    // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
+  
 
     } // ************************** End of teleopPeridic *************************
     
@@ -101,6 +100,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic(){
+    // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
       if (m_controllerDriver.getRawButton(kXboxButtonA) == true) {      
         // Attempt to display boolean value on dashboard
         SmartDashboard.putBoolean( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
