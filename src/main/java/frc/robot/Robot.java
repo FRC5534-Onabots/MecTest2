@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
  * class.  It's been modifed to call the WPI_TalonSRX controllers, which use the can bus, 
@@ -91,13 +92,26 @@ public class Robot extends TimedRobot {
                                 m_controllerDriver.getRawAxis(4));
 
     // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
-  /*
-    if (m_controllerDriver.getRawButton(kXboxButtonA) == true) {
 
-      
-      // Attempt to display boolean value on dashboard
-      SmartDashboard.putNumber( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
+    } // ************************** End of teleopPeridic *************************
+    
+    /**
+     * testPeriodic function is called periodicly when the DS is 
+     * in test mode.
+     */
+    @Override
+    public void testPeriodic(){
+      if (m_controllerDriver.getRawButton(kXboxButtonA) == true) {      
+        // Attempt to display boolean value on dashboard
+        SmartDashboard.putBoolean( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
+      } else if (m_controllerDriver.getRawButton(kXboxButtonB)){
+        SmartDashboard.putBoolean("B Button Status: ", m_controllerDriver.getRawButton(kXboxButtonB) );
+      } else if (m_controllerDriver.getRawButton(kXboxButtonX)){
+        SmartDashboard.putBoolean("X Button Status: ", m_controllerDriver.getRawButton(kXboxButtonX) );
+      } else if (m_controllerDriver.getRawButton(kXboxButtonY)) {
+        SmartDashboard.putBoolean("Y Button Status: ", m_controllerDriver.getRawButton(kXboxButtonY) );
+      }
      
-  */
-    }
+
+    } // ************************ End of testPeriodic **************************
 }
