@@ -7,17 +7,11 @@
 
 package frc.robot;
 
-//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
-//import edu.wpi.first.wpilibj.Talon;// <-- Removed becuase this version of Talon uses PWM, instead of CAN.
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-
-
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -41,18 +35,15 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonX = 3;
   private static final int kXboxButtonY = 4;
 
-  private static final int kXboxButtonLB = 5;
-  private static final int kXboxButtonRB = 6;
-  private static final int kXboxButtonLT = 2;
-  private static final int kXboxButtonRT = 3;
-
+  private static final int kXboxButtonLB = 5; // <-- Left Button
+  private static final int kXboxButtonRB = 6; // <-- Right Button
+  private static final int kXboxButtonLT = 2; // <-- Left Trigger
+  private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
   private MecanumDrive m_robotDrive;
 
   private GenericHID m_controllerDriver;
 
-  //private GenericHID m_controllerOperator;// <-- We might have so many controles that we need an operator
-  //private Joystick m_controllerDriver;
 
   /**
    * This function if called when the robot boots up.
@@ -92,26 +83,26 @@ public class Robot extends TimedRobot {
 
   
 
-    } // ************************** End of teleopPeridic *************************
+  } // ************************** End of teleopPeridic *************************
     
-    /**
-     * testPeriodic function is called periodicly when the DS is 
-     * in test mode.
-     */
-    @Override
-    public void testPeriodic(){
-    // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
-      if (m_controllerDriver.getRawButton(kXboxButtonA) == true) {      
-        // Attempt to display boolean value on dashboard
-        SmartDashboard.putBoolean( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
-      } else if (m_controllerDriver.getRawButton(kXboxButtonB)){
-        SmartDashboard.putBoolean("B Button Status: ", m_controllerDriver.getRawButton(kXboxButtonB) );
-      } else if (m_controllerDriver.getRawButton(kXboxButtonX)){
-        SmartDashboard.putBoolean("X Button Status: ", m_controllerDriver.getRawButton(kXboxButtonX) );
-      } else if (m_controllerDriver.getRawButton(kXboxButtonY)) {
-        SmartDashboard.putBoolean("Y Button Status: ", m_controllerDriver.getRawButton(kXboxButtonY) );
-      }
-     
+  /**
+   * testPeriodic function is called periodicly when the DS is 
+   * in test mode.
+   */
+  @Override
+  public void testPeriodic(){
+  // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
+    if (m_controllerDriver.getRawButton(kXboxButtonA)) {      
+      // Attempt to display boolean value on dashboard
+      SmartDashboard.putBoolean( "Button Status: " , m_controllerDriver.getRawButton(kXboxButtonA) );
+    } else if (m_controllerDriver.getRawButton(kXboxButtonB)){
+      SmartDashboard.putBoolean("B Button Status: ", m_controllerDriver.getRawButton(kXboxButtonB) );
+    } else if (m_controllerDriver.getRawButton(kXboxButtonX)){
+      SmartDashboard.putBoolean("X Button Status: ", m_controllerDriver.getRawButton(kXboxButtonX) );
+    } else if (m_controllerDriver.getRawButton(kXboxButtonY)) {
+      SmartDashboard.putBoolean("Y Button Status: ", m_controllerDriver.getRawButton(kXboxButtonY) );
+    }
+    
 
-    } // ************************ End of testPeriodic **************************
+  } // ************************ End of testPeriodic **************************
 }
