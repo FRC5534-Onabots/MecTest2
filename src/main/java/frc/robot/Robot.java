@@ -7,11 +7,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-//import edu.wpi.first.wpilibj.Talon;// <-- Removed becuase this version of Talon uses PWM, instead of CAN.
+import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
@@ -26,11 +28,29 @@ public class Robot extends TimedRobot {
   private static final int kRearRightChannel = 0;
 
   // What ever USB port we have the controller plugged into.
-  private static final int kJoystickChannel = 0;
+  private static final int kGamePadChannel = 0;
+
+  //Lets map out the buttons
+  private static final int kXboxButtonA = 1;
+  private static final int kXboxButtonB = 2;
+  private static final int kXboxButtonX = 3;
+  private static final int kXboxButtonY = 4;
+
+  private static final int kXboxButtonLB = 5; // <-- Left Button
+  private static final int kXboxButtonRB = 6; // <-- Right Button
+  private static final int kXboxButtonLT = 2; // <-- Left Trigger
+  private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
   private MecanumDrive m_robotDrive;
-  private Joystick m_stick;
 
+  private GenericHID m_controllerDriver;
+
+
+  
+  /**
+   * This function if called when the robot boots up.
+   * It creates the objects that are called by the other robot functions.
+   */
   @Override
   public void robotInit() {
     WPI_TalonSRX frontLeftTalonSRX = new WPI_TalonSRX(kFrontLeftChannel);
@@ -38,23 +58,52 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
 
-
-
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
-    frontLeftTalonSRX.setInverted(true);
-    rearLeftTalonSRX.setInverted(true);
+    frontRightTalonSRX.setInverted(true);
+    rearRightTalonSRX.setInverted(true);
 
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
-    m_stick = new Joystick(kJoystickChannel);
-  }
+    // m_controllerDriver = new Joystick(kJoystickChannel);
+    
+    m_controllerDriver = new XboxController(kGamePadChannel);
 
+  
+  } // *********************** End of roboInit **********************************
+  
+  /**
+   * When in teleop this function is called periodicly
+   */
   @Override
   public void teleopPeriodic() {
-    // Use the joystick X axis for lateral movement, Y axis for forward
-    // movement, and Z axis for rotation.
+
+    // If I did this right, this should allow for direction of travel to be set by using the left joystick
+    // while the rotation of the robot is set by the right stick on the controller.
+    m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
+                                m_controllerDriver.getRawAxis(0), 
+                                m_controllerDriver.getRawAxis(4));
+
+    if (m_controllerDriver.getRawButtonPressed(1)){
+      System.out.println("Button A Pressed");
+      SmartDashboard.putString("Button A = ", "I was pushed");
+    }
+    else if (m_controllerDriver.getRawButtonReleased(1)){
+      System.out.println("Button A Released");
+      SmartDashboard.putString("Button A = " , "I was released");
+    }
     
-    m_robotDrive.driveCartesian(m_stick.getX(), m_stick.getY(),m_stick.getZ(), 0.0);
-  }
+  } // ************************** End of teleopPeriodic *************************
+    
+  /**
+   * testPeriodic function is called periodicly when the DS is 
+   * in test mode.
+   */
+  @Override
+  public void testPeriodic(){
+  // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
+  //  public static final String ButtonStatus = "Button Pressed:";
+
+
+  } // ************************ End of testPeriodic **************************
 }
