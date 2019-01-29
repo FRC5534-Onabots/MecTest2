@@ -8,7 +8,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 /**
  * Will do the inital setup of the talonSRX motor controllers.
@@ -16,9 +16,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;;
  * to coast.
  */
 public class MotorSetup {
-    public void init(TalonSRX motor){
-        motor.configOpenLoopRamp(0.5);
-        motor.setNeutralMode(coast);
+    public void init(WPI_TalonSRX motor){
+        motor.configOpenloopRamp(0.5, 1);
+        motor.setNeutralMode(NeutralMode.Coast);
     
     }
 }
