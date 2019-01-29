@@ -44,7 +44,8 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonLT = 2; // <-- Left Trigger
   private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
-  private static final double kRampUpRate = 0.5; // The rate that the motor controller will speed up to full;
+  private static final double kRampUpRate = 3.0; // The rate that the motor controller will speed up to full;
+  private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
 
@@ -80,16 +81,16 @@ public class Robot extends TimedRobot {
      * to the TalonSRXs
      */
     frontRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontRightTalonSRX.setNeutralMode(NeutralMode.Coast);
+    frontRightTalonSRX.setNeutralMode(K_MODE);
 
     frontLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontLeftTalonSRX.setNeutralMode(NeutralMode.Coast);
+    frontLeftTalonSRX.setNeutralMode(K_MODE);
     
     rearRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearRightTalonSRX.setNeutralMode(NeutralMode.Coast);
+    rearRightTalonSRX.setNeutralMode(K_MODE);
 
     rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearLeftTalonSRX.setNeutralMode(NeutralMode.Coast);
+    rearLeftTalonSRX.setNeutralMode(K_MODE);
 
 
   
@@ -120,7 +121,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic(){
   // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
   //  public static final String ButtonStatus = "Button Pressed:";
-  
+
     //This block of code should be moved down to
     if (m_controllerDriver.getRawButtonPressed(1)){
       System.out.println("Button A Pressed");
