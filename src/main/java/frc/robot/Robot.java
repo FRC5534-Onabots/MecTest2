@@ -107,6 +107,8 @@ public class Robot extends TimedRobot {
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
 
+
+    //This block of code should be moved down to test.
     if (m_controllerDriver.getRawButtonPressed(1)){
       System.out.println("Button A Pressed");
       SmartDashboard.putString("Button A = ", "I was pushed");
