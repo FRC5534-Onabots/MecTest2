@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonLT = 2; // <-- Left Trigger
   private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
-  private static final double kRampUpRate = 3.0; // The rate that the motor controller will speed up to full;
+  private static final double kRampUpRate = 1.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
@@ -104,6 +104,7 @@ public class Robot extends TimedRobot {
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
+    
     m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
@@ -132,5 +133,6 @@ public class Robot extends TimedRobot {
       SmartDashboard.putString("Button A = " , "I was released");
     }
 
+    
   } // ************************ End of testPeriodic **************************
 }
