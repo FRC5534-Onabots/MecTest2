@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    // Need to come up with a way to tone down the joysticks
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
