@@ -9,7 +9,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 /**
- * Add your docs here.
+ * Gyro Obect
  */
 public class Gyro {
     public static ADXRS450_Gyro Gyroscope = new ADXRS450_Gyro();
@@ -19,6 +19,16 @@ public class Gyro {
         Gyroscope.reset();
 
     } // ************************ End of Gyroscope.Init **************************
+
+    
+	public static double GetHeading() {
+		return Gyroscope.getAngle();
+    } // ********************** end of Gyroscope.GetHeading **********************
+    
+    public static void ResetGyro(){
+        Gyroscope.reset();
+
+    } // ************************** end of ResetGyro ***********************
 
 
 }// ************************* End of Gyro Class **************************
