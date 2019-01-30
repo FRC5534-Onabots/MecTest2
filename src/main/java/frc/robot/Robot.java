@@ -51,6 +51,8 @@ public class Robot extends TimedRobot {
 
   private GenericHID m_controllerDriver;
 
+  private DeadBand m_stick;
+
 
   
   /**
@@ -92,7 +94,7 @@ public class Robot extends TimedRobot {
     rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
     rearLeftTalonSRX.setNeutralMode(K_MODE);
 
-
+    m_stick = new DeadBand();
   
   } // *********************** End of roboInit **********************************
   
@@ -105,9 +107,9 @@ public class Robot extends TimedRobot {
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
-    m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
-                                m_controllerDriver.getRawAxis(0), 
-                                m_controllerDriver.getRawAxis(4));
+    m_robotDrive.driveCartesian(m_stick.SmoothOper(m_controllerDriver.getRawAxis(1)), 
+                                m_stick.SmoothOper(m_controllerDriver.getRawAxis(0)), 
+                                m_stick.SmoothOper(m_controllerDriver.getRawAxis(4)));
 
 
 
