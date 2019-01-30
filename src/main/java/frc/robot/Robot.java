@@ -51,6 +51,8 @@ public class Robot extends TimedRobot {
 
   private GenericHID m_controllerDriver;
 
+  private Gyro robotGyro;
+
 
   
   /**
@@ -65,16 +67,22 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
 
-    // Invert the left side motors.
-    // You may need to change or remove this to match your robot.
-    frontRightTalonSRX.setInverted(true);
-    rearRightTalonSRX.setInverted(true);
 
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
     
     m_controllerDriver = new XboxController(kGamePadChannel);
+
+    robotGyro = new Gyro();
+
+    robotGyro.ResetGyro();
+
+    
+    // Invert the left side motors.
+    // You may need to change or remove this to match your robot.
+    frontRightTalonSRX.setInverted(true);
+    rearRightTalonSRX.setInverted(true);
 
     /**
      * Added to test out setting talon config some settings internal
@@ -104,12 +112,13 @@ public class Robot extends TimedRobot {
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
-    
+
     m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
 
 
+    SmartDashboard.setDefaultNumber("Gyro: ", robotGyro.GetHeading());
 
     
   } // ************************** End of teleopPeriodic *************************
@@ -132,6 +141,7 @@ public class Robot extends TimedRobot {
       System.out.println("Button A Released");
       SmartDashboard.putString("Button A = " , "I was released");
     }
+
 
     
   } // ************************ End of testPeriodic **************************
