@@ -14,15 +14,18 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class Gyro {
     public static ADXRS450_Gyro Gyroscope = new ADXRS450_Gyro();
 
-    public static void Init() {
+    public void Init() {
         Gyroscope.calibrate();
-        Gyroscope.reset();
+//        Gyroscope.reset();
 
     } // ************************ End of Gyroscope.Init **************************
 
     
 	public double GetHeading() {
-		return Gyroscope.getAngle();
+        //System.out.println(Gyroscope.getAngle());
+        double angle = Gyroscope.getAngle();
+        System.out.println(angle);
+		return angle;
     } // ********************** end of Gyroscope.GetHeading **********************
     
     public static void ResetGyro(){

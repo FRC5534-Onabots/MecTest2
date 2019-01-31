@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
 
   private GenericHID m_controllerDriver;
 
-  private Gyro robotGyro;
+  private Gyro MyGyro;
 
 
   
@@ -74,9 +74,9 @@ public class Robot extends TimedRobot {
     
     m_controllerDriver = new XboxController(kGamePadChannel);
 
-    robotGyro = new Gyro();
+    MyGyro = new Gyro();
 
-    robotGyro.Init();
+    MyGyro.Init();
 
     
     // Invert the left side motors.
@@ -117,8 +117,8 @@ public class Robot extends TimedRobot {
                                 m_controllerDriver.getRawAxis(0), 
                                 m_controllerDriver.getRawAxis(4));
 
-
-    SmartDashboard.setDefaultNumber("Gyro: ", robotGyro.GetHeading());
+    //System.out.println(robotGyro.GetHeading());
+    SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
 
     
   } // ************************** End of teleopPeriodic *************************
