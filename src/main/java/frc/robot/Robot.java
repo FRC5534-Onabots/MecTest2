@@ -8,14 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the depricated Iteritive robot
+import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
+import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
 
 
 /**
@@ -136,4 +135,5 @@ public class Robot extends TimedRobot {
     }
 
   } // ************************ End of testPeriodic **************************
+
 }
