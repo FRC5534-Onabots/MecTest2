@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonLT = 2; // <-- Left Trigger
   private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
-  private static final double kRampUpRate = 3.0; // The rate that the motor controller will speed up to full;
+  private static final double kRampUpRate = 0.0; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
