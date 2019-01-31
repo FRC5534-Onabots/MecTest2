@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
 
     robotGyro = new Gyro();
 
-    robotGyro.ResetGyro();
+    robotGyro.Init();
 
     
     // Invert the left side motors.
