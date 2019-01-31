@@ -21,7 +21,7 @@ public class Gyro {
     } // ************************ End of Gyroscope.Init **************************
 
     
-	public static double GetHeading() {
+	public double GetHeading() {
 		return Gyroscope.getAngle();
     } // ********************** end of Gyroscope.GetHeading **********************
     
