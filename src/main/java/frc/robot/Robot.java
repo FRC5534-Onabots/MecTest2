@@ -74,9 +74,9 @@ public class Robot extends TimedRobot {
     
     m_controllerDriver = new XboxController(kGamePadChannel);
 
-    MyGyro = new Gyro();
+    MyGyro = new Gyro();//This should create a new Gyro object called MyGyro
 
-    MyGyro.Init();
+    MyGyro.Init(); //Run the init method, to reset and calibrate the gyro.
 
     
     // Invert the left side motors.
