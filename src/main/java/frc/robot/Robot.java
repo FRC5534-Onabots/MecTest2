@@ -8,14 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the depricated Iteritive robot
+import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
+import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
 
 
 /**
@@ -51,9 +50,9 @@ public class Robot extends TimedRobot {
 
   private GenericHID m_controllerDriver;
 
+  private DeadBand m_stick;
+
   private Gyro MyGyro;
-
-
   
   /**
    * This function if called when the robot boots up.
@@ -100,7 +99,7 @@ public class Robot extends TimedRobot {
     rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
     rearLeftTalonSRX.setNeutralMode(K_MODE);
 
-
+    m_stick = new DeadBand();
   
   } // *********************** End of roboInit **********************************
   
@@ -109,13 +108,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    // Need to come up with a way to tone down the joysticks
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
-
-    m_robotDrive.driveCartesian(m_controllerDriver.getRawAxis(1), 
-                                m_controllerDriver.getRawAxis(0), 
-                                m_controllerDriver.getRawAxis(4));
+    m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
+                                m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
+                                m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
 
     //System.out.println(robotGyro.GetHeading());
     SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
@@ -145,4 +144,5 @@ public class Robot extends TimedRobot {
 
     
   } // ************************ End of testPeriodic **************************
+
 }
