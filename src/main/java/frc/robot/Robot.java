@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
 
     MyGyro = new Gyro();//This should create a new Gyro object called MyGyro
 
-    MyGyro.Init(); //Run the init method, to reset and calibrate the gyro.
+    MyGyro.SetMeUp(); //Run the init method, to reset and calibrate the gyro.
 
     
     // Invert the left side motors.
@@ -116,9 +116,7 @@ public class Robot extends TimedRobot {
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
 
-    //System.out.println(robotGyro.GetHeading());
-    SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
-
+    
     
   } // ************************** End of teleopPeriodic *************************
     
@@ -132,6 +130,7 @@ public class Robot extends TimedRobot {
   //  public static final String ButtonStatus = "Button Pressed:";
 
     //This block of code should be moved down to
+    /**
     if (m_controllerDriver.getRawButtonPressed(1)){
       System.out.println("Button A Pressed");
       SmartDashboard.putString("Button A = ", "I was pushed");
@@ -139,7 +138,17 @@ public class Robot extends TimedRobot {
     else if (m_controllerDriver.getRawButtonReleased(1)){
       System.out.println("Button A Released");
       SmartDashboard.putString("Button A = " , "I was released");
+    }*/
+
+    
+    MyGyro.SetMeUp();
+    if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
+      SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
+      System.out.println(MyGyro.GetHeading());
     }
+
+    
+
 
 
     

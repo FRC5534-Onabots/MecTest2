@@ -14,9 +14,13 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class Gyro {
     public static ADXRS450_Gyro Gyroscope = new ADXRS450_Gyro();
 
-    public void Init() {
-        Gyroscope.calibrate();
-//        Gyroscope.reset();
+    public void SetMeUp() {
+        if (Gyroscope.isConnected()){
+            System.out.println("Gryo is connected - Thank you for shopping");
+        }
+        Gyroscope.reset();
+       Gyroscope.calibrate();
+
 
     } // ************************ End of Gyroscope.Init **************************
 
