@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
 
   private ADXRS450_Gyro  MyGyro;
   private boolean HasBeenRun = false;
+  private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
   
   /**
    * This function if called when the robot boots up.
