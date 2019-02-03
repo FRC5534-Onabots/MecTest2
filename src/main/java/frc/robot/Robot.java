@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the 
 import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
@@ -52,7 +54,7 @@ public class Robot extends TimedRobot {
 
   private DeadBand m_stick;
 
-  private Gyro MyGyro;
+  private ADXRS450_Gyro  MyGyro;
   private boolean HasBeenRun = false;
   
   /**
@@ -74,10 +76,14 @@ public class Robot extends TimedRobot {
     
     m_controllerDriver = new XboxController(kGamePadChannel);
 
-    MyGyro = new Gyro();//This should create a new Gyro object called MyGyro
-    if(!HasBeenRun) {
+    MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
+    if(HasBeenRun == false) {
       HasBeenRun = true;
-      //MyGyro.SetMeUp(); //Run the init method, to reset and calibrate the gyro.
+      MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
+      MyGyro.reset();
+      if (MyGyro.isConnected()){
+        System.out.println("Gyro is connected");
+      }
     } 
 
     
@@ -145,9 +151,9 @@ public class Robot extends TimedRobot {
 
     
     //MyGyro.SetMeUp();
-    if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
-      SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
-      System.out.println(MyGyro.GetHeading());
+    if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
+      SmartDashboard.putNumber("Gyro: ", MyGyro.getAngle());
+      System.out.println(MyGyro.getAngle());
     }
 
   } // ************************ End of testPeriodic **************************
