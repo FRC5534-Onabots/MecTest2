@@ -80,8 +80,12 @@ public class Robot extends TimedRobot {
     //if(HasBeenRun == false) {
       //HasBeenRun = true;
       MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
+      System.out.println("Gyro calibrated");
       MyGyro.reset();
-      if (MyGyro.isConnected()){
+      System.out.println("Gyro reset");
+
+      HasBeenRun = MyGyro.isConnected();
+      if (HasBeenRun == true){
         System.out.println("Gyro is connected");
       }
     //} 
