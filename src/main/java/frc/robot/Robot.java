@@ -148,11 +148,11 @@ public class Robot extends TimedRobot {
       System.out.println("Button A Released");
       SmartDashboard.putString("Button A = " , "I was released");
     }*/
-
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
     
     //MyGyro.SetMeUp();
     if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
-      SmartDashboard.putNumber("Gyro: ", MyGyro.getAngle());
+      SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
       System.out.println(MyGyro.getAngle());
     }
 
