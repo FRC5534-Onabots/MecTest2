@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
-
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
@@ -79,11 +79,13 @@ public class Robot extends TimedRobot {
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
     //if(HasBeenRun == false) {
       //HasBeenRun = true;
-    
-    MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
-    System.out.println("Gyro calibrated");
-    MyGyro.reset();
-    System.out.println("Gyro reset");
+      MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
+      MyGyro.reset();
+      if (MyGyro.isConnected()){
+        SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
+        System.out.println("Gyro is connected");
+      }
+    //} 
 
     HasBeenRun = MyGyro.isConnected();
     if (HasBeenRun == true){
