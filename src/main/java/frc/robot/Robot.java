@@ -79,15 +79,18 @@ public class Robot extends TimedRobot {
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
     //if(HasBeenRun == false) {
       //HasBeenRun = true;
-      MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
-      System.out.println("Gyro calibrated");
-      MyGyro.reset();
-      System.out.println("Gyro reset");
+    
+    MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
+    System.out.println("Gyro calibrated");
+    MyGyro.reset();
+    System.out.println("Gyro reset");
 
-      HasBeenRun = MyGyro.isConnected();
-      if (HasBeenRun == true){
-        System.out.println("Gyro is connected");
-      }
+    HasBeenRun = MyGyro.isConnected();
+    if (HasBeenRun == true){
+      System.out.println("Gyro is connected");
+    } else {
+      System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
+    }
     //} 
 
     
@@ -129,7 +132,7 @@ public class Robot extends TimedRobot {
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
 
-    
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
     
   } // ************************** End of teleopPeriodic *************************
     
@@ -153,11 +156,19 @@ public class Robot extends TimedRobot {
       SmartDashboard.putString("Button A = " , "I was released");
     }*/
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
+
+
     
     //MyGyro.SetMeUp();
     if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
       SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
       System.out.println(MyGyro.getAngle());
+      HasBeenRun = MyGyro.isConnected();
+      if (HasBeenRun == true){
+        System.out.println("Gyro is connected");
+      } else {
+        System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
+      }
     }
 
   } // ************************ End of testPeriodic **************************
