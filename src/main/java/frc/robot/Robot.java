@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
   private DeadBand m_stick;
 
   private Gyro MyGyro;
+  private boolean HasBeenRun = false;
   
   /**
    * This function if called when the robot boots up.
@@ -74,8 +75,10 @@ public class Robot extends TimedRobot {
     m_controllerDriver = new XboxController(kGamePadChannel);
 
     MyGyro = new Gyro();//This should create a new Gyro object called MyGyro
-
-    MyGyro.SetMeUp(); //Run the init method, to reset and calibrate the gyro.
+    if(!HasBeenRun) {
+      HasBeenRun = true;
+      //MyGyro.SetMeUp(); //Run the init method, to reset and calibrate the gyro.
+    } 
 
     
     // Invert the left side motors.
@@ -141,17 +144,12 @@ public class Robot extends TimedRobot {
     }*/
 
     
-    MyGyro.SetMeUp();
+    //MyGyro.SetMeUp();
     if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
       SmartDashboard.putNumber("Gyro: ", MyGyro.GetHeading());
       System.out.println(MyGyro.GetHeading());
     }
 
-    
-
-
-
-    
   } // ************************ End of testPeriodic **************************
 
-}
+} 

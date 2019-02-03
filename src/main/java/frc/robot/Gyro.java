@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
  */
 public class Gyro {
     public static ADXRS450_Gyro Gyroscope = new ADXRS450_Gyro();
-
+/**
     public void SetMeUp() {
         if (Gyroscope.isConnected()){
             System.out.println("Gryo is connected - Thank you for shopping");
@@ -23,17 +23,17 @@ public class Gyro {
 
 
     } // ************************ End of Gyroscope.Init **************************
-
+*/
     
 	public double GetHeading() {
         //System.out.println(Gyroscope.getAngle());
         double angle = Gyroscope.getAngle();
-        System.out.println(angle);
+        //System.out.println(angle);
 		return angle;
     } // ********************** end of Gyroscope.GetHeading **********************
     
     public static void ResetGyro(){
-        Gyroscope.reset();
+        //Gyroscope.reset();
 
     } // ************************** end of ResetGyro ***********************
 
