@@ -77,14 +77,14 @@ public class Robot extends TimedRobot {
     m_controllerDriver = new XboxController(kGamePadChannel);
 
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
-    if(HasBeenRun == false) {
-      HasBeenRun = true;
+    //if(HasBeenRun == false) {
+      //HasBeenRun = true;
       MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
       MyGyro.reset();
       if (MyGyro.isConnected()){
         System.out.println("Gyro is connected");
       }
-    } 
+    //} 
 
     
     // Invert the left side motors.
