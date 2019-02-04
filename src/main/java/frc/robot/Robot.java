@@ -159,18 +159,18 @@ public class Robot extends TimedRobot {
     }*/
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
 
-
-    
-    //MyGyro.SetMeUp();
     if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
       SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
       System.out.println(MyGyro.getAngle());
       HasBeenRun = MyGyro.isConnected();
-      if (HasBeenRun == true){
-        System.out.println("Gyro is connected");
-      } else {
-        System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
-      }
+      if (debug){
+        if (HasBeenRun == true){
+          System.out.println("Gyro is connected");
+        } else {
+          System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
+        }
+      } // *** end if debug ***
+      
     }
 
   } // ************************ End of testPeriodic **************************
