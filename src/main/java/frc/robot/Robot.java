@@ -86,16 +86,7 @@ public class Robot extends TimedRobot {
       if(debug){System.out.println("Gyro is connected");}
     }
 
-
-    HasBeenRun = MyGyro.isConnected();
-    if (HasBeenRun == true){
-      System.out.println("Gyro is connected");
-    } else {
-      System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
-    }
-    //} 
-
-    
+        
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
     frontRightTalonSRX.setInverted(true);
