@@ -144,19 +144,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic(){
-  // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
-  //  public static final String ButtonStatus = "Button Pressed:";
 
-    //This block of code should be moved down to
-    /**
-    if (m_controllerDriver.getRawButtonPressed(1)){
-      System.out.println("Button A Pressed");
-      SmartDashboard.putString("Button A = ", "I was pushed");
-    }
-    else if (m_controllerDriver.getRawButtonReleased(1)){
-      System.out.println("Button A Released");
-      SmartDashboard.putString("Button A = " , "I was released");
-    }*/
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
 
     if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
