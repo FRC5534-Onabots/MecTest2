@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the 
 import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
-import edu.wpi.first.wpilibj.Encoder; // <-- Needed for doing PID Loop
-import edu.wpi.first.wpilibj.PIDController;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -62,7 +59,6 @@ public class Robot extends TimedRobot {
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
   
-  private double lockedDriveAngle;
   /**
    * This function if called when the robot boots up.
    * It creates the objects that are called by the other robot functions.
@@ -128,18 +124,6 @@ public class Robot extends TimedRobot {
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
-
-    // Lock the drive angle if left trigger is held and pass that into the drive system. This should
-    // make the turn to what ever the gyro says and stay on that while the left trigger is pulled.
-    // I think.  Totally guessing here. 
-    while(m_controllerDriver.getRawButtonPressed(kXboxButtonLT)){
-      lockedDriveAngle = MyGyro.getAngle();
-      m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
-                                m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
-                                0,
-                                lockedDriveAngle);
-    }
-    // Otherwise just drive normal.  But don't look like your driving normal. 
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
