@@ -139,7 +139,7 @@ public class Robot extends TimedRobot {
                                 0,
                                 lockedDriveAngle);
     }
-    // Otherwise just drive normal.  But don't look like your driving normal. 
+    // Otherwise just drive normal.  But don't look like your driving normal. I don't know.
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
