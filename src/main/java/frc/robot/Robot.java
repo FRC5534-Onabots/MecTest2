@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controlle
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
@@ -84,6 +85,8 @@ public class Robot extends TimedRobot {
     if (MyGyro.isConnected()){
       SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
       if(debug){System.out.println("Gyro is connected");}
+    } else {
+      DriverStation.reportError("Error - No Gyro", MyGyro.isConnected());
     }
 
         
