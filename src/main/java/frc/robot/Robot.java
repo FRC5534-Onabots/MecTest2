@@ -131,13 +131,16 @@ public class Robot extends TimedRobot {
 
     // Lock the drive angle if left trigger is held and pass that into the drive system. This should
     // make the turn to what ever the gyro says and stay on that while the left trigger is pulled.
-    // I think.  Totally guessing here. 
+    // I think.  Totally guessing here. This should change it driving to be Field Orintated, instead of 
+    // robot orintated.
     while(m_controllerDriver.getRawButtonPressed(kXboxButtonLT)){
       lockedDriveAngle = MyGyro.getAngle();
+      SmartDashboard.putNumber("Locked Angle:", lockedDriveAngle);
       m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 0,
                                 lockedDriveAngle);
+      SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
     }
     // Otherwise just drive normal.  But don't look like your driving normal. I don't know.
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
