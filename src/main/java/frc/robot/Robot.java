@@ -12,10 +12,13 @@ import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the 
 import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
-
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
@@ -43,7 +46,7 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonLT = 2; // <-- Left Trigger
   private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
-  private static final double kRampUpRate = 0.0; // The rate that the motor controller will speed up to full;
+  private static final double kRampUpRate = 1.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
@@ -52,7 +55,9 @@ public class Robot extends TimedRobot {
 
   private DeadBand m_stick;
 
-
+  private ADXRS450_Gyro  MyGyro;
+  private boolean HasBeenRun = false;
+  private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
   
   /**
    * This function if called when the robot boots up.
@@ -66,16 +71,29 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
 
-    // Invert the left side motors.
-    // You may need to change or remove this to match your robot.
-    frontRightTalonSRX.setInverted(true);
-    rearRightTalonSRX.setInverted(true);
 
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
     
     m_controllerDriver = new XboxController(kGamePadChannel);
+
+    MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
+
+    MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
+    MyGyro.reset();
+    if (MyGyro.isConnected()){
+      SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
+      if(debug){System.out.println("Gyro is connected");}
+    } else {
+      DriverStation.reportError("Error - No Gyro", MyGyro.isConnected());
+    }
+
+        
+    // Invert the left side motors.
+    // You may need to change or remove this to match your robot.
+    frontRightTalonSRX.setInverted(true);
+    rearRightTalonSRX.setInverted(true);
 
     /**
      * Added to test out setting talon config some settings internal
@@ -110,8 +128,7 @@ public class Robot extends TimedRobot {
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
 
-
-
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
     
   } // ************************** End of teleopPeriodic *************************
     
@@ -121,19 +138,23 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic(){
-  // Ok, so how do we read that a button has been pressed?  Also can we output it to a dashboard?
-  //  public static final String ButtonStatus = "Button Pressed:";
 
-    //This block of code should be moved down to
-    if (m_controllerDriver.getRawButtonPressed(1)){
-      System.out.println("Button A Pressed");
-      SmartDashboard.putString("Button A = ", "I was pushed");
-    }
-    else if (m_controllerDriver.getRawButtonReleased(1)){
-      System.out.println("Button A Released");
-      SmartDashboard.putString("Button A = " , "I was released");
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
+
+    if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
+      SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
+      System.out.println(MyGyro.getAngle());
+      HasBeenRun = MyGyro.isConnected();
+      if (debug){
+        if (HasBeenRun == true){
+          System.out.println("Gyro is connected");
+        } else {
+          System.out.println("Gyro? We got no stinkin GYRO! - Gyro not connected");
+        }
+      } // *** end if debug ***
+      
     }
 
   } // ************************ End of testPeriodic **************************
 
-}
+} 
