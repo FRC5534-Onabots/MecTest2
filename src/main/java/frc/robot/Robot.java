@@ -20,6 +20,8 @@ import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
+import edu.wpi.first.wpilibj.PIDController;// <-- Needed for doing PID. Have no idea how to use it, but it's needed.
+
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
  * class.  It's been modifed to call the WPI_TalonSRX controllers, which use the can bus, 
@@ -48,6 +50,9 @@ public class Robot extends TimedRobot {
 
   private static final double kRampUpRate = 1.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
+
+  //PID stuff
+  private static final double kP = 0, kI = 0, kD = 0;
 
   private MecanumDrive m_robotDrive;
 
