@@ -62,6 +62,8 @@ public class Robot extends TimedRobot {
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
   
+  private boolean WhyYouBooleanMe = false;
+  
   private double lockedDriveAngle;
   /**
    * This function if called when the robot boots up.
@@ -87,7 +89,7 @@ public class Robot extends TimedRobot {
     MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
     MyGyro.reset();
     if (MyGyro.isConnected()){
-      SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
+      SmartDashboard.putNumber("Gryo:", MyGyro.getAngle());
       if(debug){System.out.println("Gyro is connected");}
     } else {
       DriverStation.reportError("Error - No Gyro", MyGyro.isConnected());
@@ -131,16 +133,26 @@ public class Robot extends TimedRobot {
 
     // Lock the drive angle if left trigger is held and pass that into the drive system. This should
     // make the turn to what ever the gyro says and stay on that while the left trigger is pulled.
-    // I think.  Totally guessing here. This should change it driving to be Field Orintated, instead of 
+    // I think.  Totally guessing here. This should change it driving to be Field Oriented, instead of 
     // robot orintated.
-    while(m_controllerDriver.getRawButtonPressed(kXboxButtonLT)){
-      lockedDriveAngle = MyGyro.getAngle();
+    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && (WhyYouBooleanMe = false)) {
+        WhyYouBooleanMe = true;
+        lockedDriveAngle = Math.round(MyGyro.getAngle());
+        if (debug) {System.out.println("Button Pressed and ANgle Locked");}
+    }
+    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) == 0) && (WhyYouBooleanMe = true)){
+        WhyYouBooleanMe = false;
+    }
+
+    while(m_controllerDriver.getRawAxis(kXboxButtonLT) != 0){
+     // lockedDriveAngle = Math.round(MyGyro.getAngle());
+      if (debug) {System.out.println("Left Trigger Pulled");}
       SmartDashboard.putNumber("Locked Angle:", lockedDriveAngle);
       m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 0,
                                 lockedDriveAngle);
-      SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
+      SmartDashboard.putNumber("Gyro:", Math.round(MyGyro.getAngle()));
     }
     // Otherwise just drive normal.  But don't look like your driving normal. I don't know.
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
