@@ -62,9 +62,10 @@ public class Robot extends TimedRobot {
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
   
-  private boolean WhyYouBooleanMe = false;
+  private boolean LockTheDrive = false;
   
   private double lockedDriveAngle;
+
   /**
    * This function if called when the robot boots up.
    * It creates the objects that are called by the other robot functions.
@@ -135,13 +136,14 @@ public class Robot extends TimedRobot {
     // make the turn to what ever the gyro says and stay on that while the left trigger is pulled.
     // I think.  Totally guessing here. This should change it driving to be Field Oriented, instead of 
     // robot orintated.
-    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && (WhyYouBooleanMe = false)) {
-        WhyYouBooleanMe = true;
+    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && (LockTheDrive == false)) {
+        LockTheDrive = true;
         lockedDriveAngle = Math.round(MyGyro.getAngle());
         if (debug) {System.out.println("Button Pressed and ANgle Locked");}
     }
-    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) == 0) && (WhyYouBooleanMe = true)){
-        WhyYouBooleanMe = false;
+    if ((m_controllerDriver.getRawAxis(kXboxButtonLT) == 0) && (LockTheDrive == true)){
+        LockTheDrive = false;
+        if (debug) {System.out.println("Button NOT pressed any more");}
     }
 
     while(m_controllerDriver.getRawAxis(kXboxButtonLT) != 0){
