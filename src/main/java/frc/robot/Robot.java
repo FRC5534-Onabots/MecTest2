@@ -29,8 +29,15 @@ public class Robot extends TimedRobot {
   // These will need to be updated to the CAN Ids of the WPI_TalonSRX's
   private static final int kFrontLeftChannel = 2;
   private static final int kRearLeftChannel = 3;
-  private static final int kFrontRightChannel = 1;
-  private static final int kRearRightChannel = 0;
+  private static final int kFrontRightChannel = 5;
+  private static final int kRearRightChannel = 6;
+
+  // Pneumatic Ports
+  private static final int kGrabberOpen = 2;
+  private static final int kGrabberClose = 3;
+  
+  private static final int kSlideOpen = 0;
+  private static final int kSlideClose = 1;
 
   // What ever USB port we have the controller plugged into.
   private static final int kGamePadChannel = 0;
@@ -92,7 +99,7 @@ public class Robot extends TimedRobot {
         
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
-    frontRightTalonSRX.setInverted(true);
+    frontLeftTalonSRX.setInverted(true);
     rearRightTalonSRX.setInverted(true);
 
     /**
