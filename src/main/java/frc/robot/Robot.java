@@ -13,12 +13,16 @@ import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controlle
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
@@ -33,6 +37,7 @@ public class Robot extends TimedRobot {
   private static final int kRearRightChannel = 6;
 
   // Pneumatic Ports
+  private static final int kPCMPort = 0; // <-- Can id # for the PCM
   private static final int kGrabberOpen = 2;
   private static final int kGrabberClose = 3;
   
@@ -53,7 +58,7 @@ public class Robot extends TimedRobot {
   private static final int kXboxButtonLT = 2; // <-- Left Trigger
   private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
-  private static final double kRampUpRate = 1.5; // The rate that the motor controller will speed up to full;
+  private static final double kRampUpRate = 0.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
@@ -65,7 +70,12 @@ public class Robot extends TimedRobot {
   private ADXRS450_Gyro  MyGyro;
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
+
+  Compressor myCompressor = new Compressor(kPCMPort);
   
+  //DoubleSolenoid Grabber = new DoubleSolenoid(kGrabberOpen, kGrabberClose);
+  DoubleSolenoid myGrabber = new DoubleSolenoid(kPCMPort, 2, 3);
+  DoubleSolenoid myTable = new DoubleSolenoid(kPCMPort, kSlideOpen, kSlideClose);
   /**
    * This function if called when the robot boots up.
    * It creates the objects that are called by the other robot functions.
@@ -114,11 +124,17 @@ public class Robot extends TimedRobot {
     
     rearRightTalonSRX.configOpenloopRamp(kRampUpRate);
     rearRightTalonSRX.setNeutralMode(K_MODE);
-
+    
     rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
     rearLeftTalonSRX.setNeutralMode(K_MODE);
-
+    
     m_stick = new DeadBand();
+    
+    myCompressor.enabled();
+    
+    //myGrabber.set(DoubleSolenoid.Value.kOff);
+    //myTable.set(Value.kOff);
+
   
   } // *********************** End of roboInit **********************************
   
@@ -135,16 +151,37 @@ public class Robot extends TimedRobot {
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
 
-    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+                                SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+                                
+    if (m_controllerDriver.getRawButtonPressed(kXboxButtonX)) {
+      System.out.println("X button pressed, Grabber OPEN!");
+      myGrabber.set(DoubleSolenoid.Value.kForward);
+      //myGrabber.set(Value.kForward);
+    }
+
+    if (m_controllerDriver.getRawButtonPressed(kXboxButtonB)) {
+      System.out.println("B button pressed, Grabber CLOSE!");
+      myGrabber.set(DoubleSolenoid.Value.kReverse);
+    }  
+
+    if (m_controllerDriver.getRawButtonPressed(kXboxButtonY)) {
+      myTable.set(Value.kForward);
+    }
+
+    if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
+      myTable.set(Value.kReverse);
+    }
+
+
+    } // ************************** End of teleopPeriodic *************************
     
-  } // ************************** End of teleopPeriodic *************************
-    
-  /**
-   * testPeriodic function is called periodicly when the DS is 
-   * in test mode.
-   */
-  @Override
-  public void testPeriodic(){
+    /**
+     * testPeriodic function is called periodicly when the DS is 
+     * in test mode.
+     */
+    @Override
+    public void testPeriodic(){
+
 
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
 
@@ -161,6 +198,9 @@ public class Robot extends TimedRobot {
       } // *** end if debug ***
       
     }
+
+    // Testing out Pneumatic Grabby thing
+  
 
   } // ************************ End of testPeriodic **************************
 
