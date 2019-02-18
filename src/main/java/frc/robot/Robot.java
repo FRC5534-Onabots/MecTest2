@@ -30,11 +30,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  * instead of PWM.  
  */
 public class Robot extends TimedRobot {
+
   // These will need to be updated to the CAN Ids of the WPI_TalonSRX's
   private static final int kFrontLeftChannel = 2;
   private static final int kRearLeftChannel = 3;
   private static final int kFrontRightChannel = 5;
   private static final int kRearRightChannel = 6;
+
+  private static final int kElev1Motor = 1;
+  private static final int kGripperAngle = 7;
+  private static final int kElev2Motor = 4;
 
   // Pneumatic Ports
   private static final int kPCMPort = 0; // <-- Can id # for the PCM
@@ -76,6 +81,11 @@ public class Robot extends TimedRobot {
   //DoubleSolenoid Grabber = new DoubleSolenoid(kGrabberOpen, kGrabberClose);
   DoubleSolenoid myGrabber = new DoubleSolenoid(kPCMPort, 2, 3);
   DoubleSolenoid myTable = new DoubleSolenoid(kPCMPort, kSlideOpen, kSlideClose);
+  
+  WPI_VictorSPX elev1Motor = new WPI_VictorSPX(kElev1Motor);
+  WPI_VictorSPX elev2Motor = new WPI_VictorSPX(kElev2Motor);
+  WPI_VictorSPX gripAngleMotor = new WPI_VictorSPX(7);
+
   /**
    * This function if called when the robot boots up.
    * It creates the objects that are called by the other robot functions.
@@ -89,6 +99,7 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
 
 
+
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
@@ -99,6 +110,7 @@ public class Robot extends TimedRobot {
 
     MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
     MyGyro.reset();
+
     if (MyGyro.isConnected()){
       SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
       if(debug){System.out.println("Gyro is connected");}
@@ -128,6 +140,10 @@ public class Robot extends TimedRobot {
     rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
     rearLeftTalonSRX.setNeutralMode(K_MODE);
     
+    gripAngleMotor.setNeutralMode(NeutralMode.Brake);
+    elev1Motor.setNeutralMode(NeutralMode.Brake);
+    elev2Motor.setNeutralMode(NeutralMode.Brake);
+
     m_stick = new DeadBand();
     
     myCompressor.enabled();
@@ -153,7 +169,7 @@ public class Robot extends TimedRobot {
 
                                 SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
                                 
-    if (m_controllerDriver.getRawButtonPressed(kXboxButtonX)) {
+    if (m_controllerDriver.getRawAxis(kXboxButtonLT) == 0 && m_controllerDriver.getRawButtonPressed(kXboxButtonX)) {
       System.out.println("X button pressed, Grabber OPEN!");
       myGrabber.set(DoubleSolenoid.Value.kForward);
       //myGrabber.set(Value.kForward);
@@ -170,6 +186,20 @@ public class Robot extends TimedRobot {
 
     if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
       myTable.set(Value.kReverse);
+    }
+
+ 
+    while ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && m_controllerDriver.getRawButtonPressed(kXboxButtonB)){
+        //Grippy goes up
+        gripAngleMotor.set(-0.25);
+        System.out.println("L Trigger pulled and X Button Pressed");
+    
+    }
+
+    while ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && m_controllerDriver.getRawButtonPressed(kXboxButtonB)){
+    
+      gripAngleMotor.set(0.25);
+      System.out.println("L Trigger pulled and B button pressed");
     }
 
 
