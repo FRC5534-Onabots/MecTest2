@@ -228,11 +228,11 @@ public class Robot extends TimedRobot {
       gripAngleMotor.stopMotor();
     }
     // ********************* Gripper Motor Up *******************
-    if (m_Operator.getRawButtonPressed(kXboxButtonLB){
+    if (m_Operator.getRawButtonPressed(kXboxButtonLB)){
       System.out.println("Left Trigger Pulled");
       gripAngleMotor.set(1.0);
     }
-    else if (m_Operator.getRawButtonReleased(kXboxButtonLB){
+    else if (m_Operator.getRawButtonReleased(kXboxButtonLB)){
       gripAngleMotor.stopMotor();
     }
 
