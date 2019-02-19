@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
 
   // What ever USB port we have the controller plugged into.
   private static final int kGamePadChannel = 0;
+  private static final int kXboxChannel = 1;
 
   //Lets map out the buttons
   private static final int kXboxButtonA = 1;
@@ -68,7 +69,8 @@ public class Robot extends TimedRobot {
 
   private MecanumDrive m_robotDrive;
 
-  private GenericHID m_controllerDriver;
+  private GenericHID m_Driver;
+  private GenericHID m_Operator;
 
   private DeadBand m_stick;
 
@@ -104,7 +106,9 @@ public class Robot extends TimedRobot {
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
     
-    m_controllerDriver = new XboxController(kGamePadChannel);
+    m_Driver = new XboxController(kXboxChannel); // <-- Driver controller
+    m_Operator = new XboxController(kGamePadChannel); //<-- Operator controller
+
 
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
 
@@ -141,8 +145,11 @@ public class Robot extends TimedRobot {
     rearLeftTalonSRX.setNeutralMode(K_MODE);
     
     gripAngleMotor.setNeutralMode(NeutralMode.Brake);
+    gripAngleMotor.stopMotor();
     elev1Motor.setNeutralMode(NeutralMode.Brake);
+    elev1Motor.stopMotor();
     elev2Motor.setNeutralMode(NeutralMode.Brake);
+    elev2Motor.stopMotor();
 
     m_stick = new DeadBand();
     
@@ -150,6 +157,8 @@ public class Robot extends TimedRobot {
     
     //myGrabber.set(DoubleSolenoid.Value.kOff);
     //myTable.set(Value.kOff);
+
+
 
   
   } // *********************** End of roboInit **********************************
@@ -163,45 +172,69 @@ public class Robot extends TimedRobot {
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
-    m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_controllerDriver.getRawAxis(1)), 
-                                m_stick.SmoothAxis(m_controllerDriver.getRawAxis(0)), 
-                                m_stick.SmoothAxis(m_controllerDriver.getRawAxis(4)));
+    m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
+                                m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
+                                m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
 
                                 SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
                                 
-    if (m_controllerDriver.getRawAxis(kXboxButtonLT) == 0 && m_controllerDriver.getRawButtonPressed(kXboxButtonX)) {
-      System.out.println("X button pressed, Grabber OPEN!");
+    // ***************** Open Grabber *****************
+    if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
+      System.out.println("Oper X button pressed, Grabber OPEN!");
       myGrabber.set(DoubleSolenoid.Value.kForward);
-      //myGrabber.set(Value.kForward);
     }
 
-    if (m_controllerDriver.getRawButtonPressed(kXboxButtonB)) {
-      System.out.println("B button pressed, Grabber CLOSE!");
+    // *************** Close Grabber ****************
+    if (m_Operator.getRawButtonPressed(kXboxButtonB)) {
+      System.out.println("Oper B button pressed, Grabber CLOSE!");
       myGrabber.set(DoubleSolenoid.Value.kReverse);
-    }  
+    }   
 
-    if (m_controllerDriver.getRawButtonPressed(kXboxButtonY)) {
+    // ************* Move TABLE forward *******************
+    if (m_Driver.getRawButtonPressed(kXboxButtonY)) {
       myTable.set(Value.kForward);
     }
-
-    if (m_controllerDriver.getRawButtonPressed(kXboxButtonA)) {
+    // ************* Move TABLE backward ******************
+    if (m_Driver.getRawButtonPressed(kXboxButtonA)) {
       myTable.set(Value.kReverse);
     }
 
- 
-    while ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && m_controllerDriver.getRawButtonPressed(kXboxButtonB)){
-        //Grippy goes up
-        gripAngleMotor.set(-0.25);
-        System.out.println("L Trigger pulled and X Button Pressed");
-    
+    // ************* Move Elevator 1 Up/Down *******************
+    if (m_Operator.getRawAxis(1) != 0){
+        //Going Up
+        elev1Motor.set(m_Operator.getRawAxis(1));
+    }
+    else if (m_Operator.getRawAxis(1) == 0) {
+      elev1Motor.stopMotor();
     }
 
-    while ((m_controllerDriver.getRawAxis(kXboxButtonLT) != 0) && m_controllerDriver.getRawButtonPressed(kXboxButtonB)){
-    
-      gripAngleMotor.set(0.25);
-      System.out.println("L Trigger pulled and B button pressed");
+
+    // *************** Move Elevator 2 UP/DOwn *************
+    if (m_Operator.getRawAxis(5) != 0) {
+      //Going Up
+      elev2Motor.set(m_Operator.getRawAxis(5));  
+    }
+    else if (m_Operator.getRawAxis(5) == 0) {
+      elev2Motor.stopMotor();
     }
 
+
+    // ********************* Gripper Motor Down ******************
+    if (m_Operator.getRawButtonPressed(kXboxButtonRB)){
+      System.out.println("Right Trigger Pulled ");
+      gripAngleMotor.set(-1.0);
+    }
+    else if (m_Operator.getRawButtonReleased(kXboxButtonRB)) {
+      gripAngleMotor.stopMotor();
+    }
+    // ********************* Gripper Motor Up *******************
+    if (m_Operator.getRawButtonPressed(kXboxButtonLB){
+      System.out.println("Left Trigger Pulled");
+      gripAngleMotor.set(1.0);
+    }
+    else if (m_Operator.getRawButtonReleased(kXboxButtonLB){
+      gripAngleMotor.stopMotor();
+    }
 
     } // ************************** End of teleopPeriodic *************************
     
@@ -215,7 +248,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
 
-    if (m_controllerDriver.getRawButtonReleased(kXboxButtonA)) {
+    if (m_Driver.getRawButtonReleased(kXboxButtonA)) {
       SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());
       System.out.println(MyGyro.getAngle());
       HasBeenRun = MyGyro.isConnected();
