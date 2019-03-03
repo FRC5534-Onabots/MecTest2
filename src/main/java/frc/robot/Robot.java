@@ -34,11 +34,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public class Robot extends TimedRobot {
 
-  // These will need to be updated to the CAN Ids of the WPI_TalonSRX's
-  private static final int kFrontLeftChannel = 2;
-  private static final int kRearLeftChannel = 3;
-  private static final int kFrontRightChannel = 5;
-  private static final int kRearRightChannel = 6;
+
 
   private static final int kElev1Motor = 1;
   private static final int kGripperAngle = 7;
@@ -104,21 +100,15 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-   WPI_TalonSRX frontLeftTalonSRX = new WPI_TalonSRX(kFrontLeftChannel);
-    WPI_TalonSRX frontRightTalonSRX = new WPI_TalonSRX(kFrontRightChannel);
-    WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
-    WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
+    Spark frontleft = new Spark(8);
+    Spark frontright = new Spark(7);
+    Spark rearleft = new Spark(6);
+    Spark rearright = new Spark(9);
 
 
-Spark frontleft = new Spark(8);
-Spark frontright = new Spark(7);
-Spark rearleft = new Spark(6);
-Spark rearright = new Spark(9);
-
-
-    //m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
+    
     m_robotDrive = new MecanumDrive(frontleft, rearleft, frontright, rearright);
-    // m_controllerDriver = new Joystick(kJoystickChannel);
+    
     
     m_Driver = new XboxController(kXboxChannel); // <-- Driver controller
     m_Operator = new XboxController(kGamePadChannel); //<-- Operator controller
@@ -139,27 +129,10 @@ Spark rearright = new Spark(9);
         
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
-    /*frontLeftTalonSRX.setInverted(true);
-    rearRightTalonSRX.setInverted(true);*/
-
-    frontright.setInverted(true);
-    rearleft.setInverted(true);
-
-    /**
-     * Added to test out setting talon config some settings internal
-     * to the TalonSRXs
-     */
-    frontRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontRightTalonSRX.setNeutralMode(K_MODE);
-
-    frontLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontLeftTalonSRX.setNeutralMode(K_MODE);
     
-    rearRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearRightTalonSRX.setNeutralMode(K_MODE);
-    
-    rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearLeftTalonSRX.setNeutralMode(K_MODE);
+    rearright.setInverted(true);
+    frontleft.setInverted(true);
+
     
     gripAngleMotor.setNeutralMode(NeutralMode.Brake);
     gripAngleMotor.stopMotor();
@@ -192,8 +165,10 @@ Spark rearright = new Spark(9);
 
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
+    // I've also inverted Axis 0 so when you push left, the robot slides left. Right, robot slides right.
+    
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
-                                m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
+                                m_stick.SmoothAxis(-m_Driver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
 
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
@@ -209,15 +184,6 @@ Spark rearright = new Spark(9);
       System.out.println("Oper B button pressed, Grabber CLOSE!");
       myGrabber.set(DoubleSolenoid.Value.kReverse);
     }   
-
-    // ************* Move TABLE forward *******************
-    if (m_Driver.getRawButtonPressed(kXboxButtonY)) {
-      myTable.set(Value.kForward);
-    }
-    // ************* Move TABLE backward ******************
-    if (m_Driver.getRawButtonPressed(kXboxButtonA)) {
-      myTable.set(Value.kReverse);
-    }
 
     // ************* Move Elevator 1 Up/Down *******************
     if ((m_Operator.getRawAxis(1) > 0) && (elev1Top.get() == false)){
