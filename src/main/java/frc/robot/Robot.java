@@ -166,10 +166,16 @@ public class Robot extends TimedRobot {
     // If I did this right, this should allow for direction of travel to be set by using the left joystick
     // while the rotation of the robot is set by the right stick on the controller.
     // I've also inverted Axis 0 so when you push left, the robot slides left. Right, robot slides right.
-    
-    m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
-                                m_stick.SmoothAxis(-m_Driver.getRawAxis(0)), 
-                                m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
+    if (m_Driver.getRawButton(kXboxButtonLB) == false){
+      m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
+                                  m_stick.SmoothAxis(-m_Driver.getRawAxis(0)), 
+                                  m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
+    } else if (m_Driver.getRawButton(kXboxButtonLB) == true){
+      m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)),
+                                  m_stick.SmoothAxis(m_Driver.getRawAxis(0)),
+                                  0,
+                                  MyGyro.getAngle());
+    }
 
     SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
                                 
