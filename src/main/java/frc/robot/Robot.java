@@ -8,16 +8,19 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;// <-- Needed for xbox style controllers
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.TimedRobot;// <-- New for 2019, takes over for the depricated Iteritive robot
 import edu.wpi.first.wpilibj.XboxController;// <-- For using a gamepad controller
 import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base.
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;// <-- For writing data back to the drivers station.
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
@@ -88,6 +91,12 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX elev2Motor = new WPI_VictorSPX(kElev2Motor);
   WPI_VictorSPX gripAngleMotor = new WPI_VictorSPX(7);
 
+  DigitalInput elev1Top = new DigitalInput(3);
+  DigitalInput elev1Bottom = new DigitalInput(2);
+  DigitalInput elev2Top = new DigitalInput(1);
+  DigitalInput elev2Bottom = new DigitalInput(0);
+
+  boolean canMoveElev1, canMoveElev2;
   /**
    * This function if called when the robot boots up.
    * It creates the objects that are called by the other robot functions.
@@ -95,15 +104,20 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    WPI_TalonSRX frontLeftTalonSRX = new WPI_TalonSRX(kFrontLeftChannel);
+   WPI_TalonSRX frontLeftTalonSRX = new WPI_TalonSRX(kFrontLeftChannel);
     WPI_TalonSRX frontRightTalonSRX = new WPI_TalonSRX(kFrontRightChannel);
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
 
 
+Spark frontleft = new Spark(8);
+Spark frontright = new Spark(7);
+Spark rearleft = new Spark(6);
+Spark rearright = new Spark(9);
 
-    m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
+    //m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
+    m_robotDrive = new MecanumDrive(frontleft, rearleft, frontright, rearright);
     // m_controllerDriver = new Joystick(kJoystickChannel);
     
     m_Driver = new XboxController(kXboxChannel); // <-- Driver controller
@@ -125,8 +139,11 @@ public class Robot extends TimedRobot {
         
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
-    frontLeftTalonSRX.setInverted(true);
-    rearRightTalonSRX.setInverted(true);
+    /*frontLeftTalonSRX.setInverted(true);
+    rearRightTalonSRX.setInverted(true);*/
+
+    frontright.setInverted(true);
+    rearleft.setInverted(true);
 
     /**
      * Added to test out setting talon config some settings internal
@@ -154,6 +171,9 @@ public class Robot extends TimedRobot {
     m_stick = new DeadBand();
     
     myCompressor.enabled();
+
+    canMoveElev1 = true;
+    canMoveElev2 = true;
     
     //myGrabber.set(DoubleSolenoid.Value.kOff);
     //myTable.set(Value.kOff);
@@ -176,7 +196,7 @@ public class Robot extends TimedRobot {
                                 m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
 
-                                SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
                                 
     // ***************** Open Grabber *****************
     if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
@@ -200,13 +220,33 @@ public class Robot extends TimedRobot {
     }
 
     // ************* Move Elevator 1 Up/Down *******************
-    if (m_Operator.getRawAxis(1) != 0){
+    if ((m_Operator.getRawAxis(1) > 0) && (elev1Top.get() == false)){
+      elev1Motor.set(m_Operator.getRawAxis(1));
+    }
+    else if ((m_Operator.getRawAxis(1) > 0) && (elev1Top.get() == true)){
+      elev1Motor.stopMotor();
+    }
+
+    if ((m_Operator.getRawAxis(1) < 0) && (elev1Bottom.get() == false)){
+      elev1Motor.set(m_Operator.getRawAxis(1));
+    }
+    else if ((m_Operator.getRawAxis(1) < 0) && (elev1Bottom.get() == true)){
+      elev1Motor.stopMotor();
+    }
+
+    // first try, didn't work.
+    /*if ((m_Operator.getRawAxis(1) != 0)  & (elev1Top.get() == true) | (elev1Bottom.get() == true)) {
         //Going Up
         elev1Motor.set(m_Operator.getRawAxis(1));
     }
-    else if (m_Operator.getRawAxis(1) == 0) {
+    else if ((m_Operator.getRawAxis(1) == 0) | (elev1Top.get() == false) | (elev1Bottom.get() == false)){
       elev1Motor.stopMotor();
     }
+*/
+    // ************* Limit Switch Elevator 1 ********************
+    if (elev1Top.get() == false) { 
+        System.out.println("Elev Top Switch Pressed");
+    } 
 
 
     // *************** Move Elevator 2 UP/DOwn *************
