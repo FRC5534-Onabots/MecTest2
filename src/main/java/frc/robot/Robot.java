@@ -175,8 +175,7 @@ public class Robot extends TimedRobot {
     m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
                                 m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
                                 m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
-
-                                SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
                                 
     // ***************** Open Grabber *****************
     if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
