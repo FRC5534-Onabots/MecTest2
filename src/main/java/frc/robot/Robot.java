@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   private static final int kXboxChannel = 1;
 
   //Lets map out the buttons
-  private static final int kXboxButtonA = 1;
+  private static final int kXboxButtonA  = 1;
   private static final int kXboxButtonB = 2;
   private static final int kXboxButtonX = 3;
   private static final int kXboxButtonY = 4;
@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
 
 
 
+    //m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
@@ -125,24 +126,16 @@ public class Robot extends TimedRobot {
         
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
-    frontLeftTalonSRX.setInverted(true);
-    rearRightTalonSRX.setInverted(true);
+    //frontLeftTalonSRX.setInverted(true);
+    //rearRightTalonSRX.setInverted(true);
 
     /**
      * Added to test out setting talon config some settings internal
      * to the TalonSRXs
      */
-    frontRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontRightTalonSRX.setNeutralMode(K_MODE);
-
-    frontLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    frontLeftTalonSRX.setNeutralMode(K_MODE);
-    
-    rearRightTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearRightTalonSRX.setNeutralMode(K_MODE);
-    
-    rearLeftTalonSRX.configOpenloopRamp(kRampUpRate);
-    rearLeftTalonSRX.setNeutralMode(K_MODE);
+    m_robotDrive.setSafetyEnabled(true);
+    m_robotDrive.setExpiration(0.1);
+    m_robotDrive.setMaxOutput(1.0);
     
     gripAngleMotor.setNeutralMode(NeutralMode.Brake);
     gripAngleMotor.stopMotor();
@@ -163,19 +156,14 @@ public class Robot extends TimedRobot {
   
   } // *********************** End of roboInit **********************************
   
-  /**
-   * When in teleop this function is called periodicly
-   */
-  @Override
-  public void teleopPeriodic() {
-    // Need to come up with a way to tone down the joysticks
 
-    // If I did this right, this should allow for direction of travel to be set by using the left joystick
-    // while the rotation of the robot is set by the right stick on the controller.
-    m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
-                                m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
-                                m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
-    SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+  @Override
+  public void autonomousPeriodic() {
+    
+    m_robotDrive.driveCartesian(m_Driver.getRawAxis(0), 
+                                -m_Driver.getRawAxis(1), 
+                                m_Driver.getRawAxis(2));
+    
                                 
     // ***************** Open Grabber *****************
     if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
@@ -190,11 +178,89 @@ public class Robot extends TimedRobot {
     }   
 
     // ************* Move TABLE forward *******************
-    if (m_Driver.getRawButtonPressed(kXboxButtonY)) {
+    if (m_Driver.getRawButtonPressed(5)) {
       myTable.set(Value.kForward);
     }
     // ************* Move TABLE backward ******************
-    if (m_Driver.getRawButtonPressed(kXboxButtonA)) {
+    if (m_Driver.getRawButtonPressed(6)) {
+      myTable.set(Value.kReverse);
+    }
+
+    // ************* Move Elevator 1 Up/Down *******************
+    if (m_Operator.getRawAxis(1) != 0){
+        //Going Up
+        elev1Motor.set(m_Operator.getRawAxis(1));
+    }
+    else if (m_Operator.getRawAxis(1) == 0) {
+      elev1Motor.stopMotor();
+    }
+
+
+    // *************** Move Elevator 2 UP/DOwn *************
+    if (m_Operator.getRawAxis(5) != 0) {
+      //Going Up
+      elev2Motor.set(m_Operator.getRawAxis(5));  
+    }
+    else if (m_Operator.getRawAxis(5) == 0) {
+      elev2Motor.stopMotor();
+    }
+
+
+    // ********************* Gripper Motor Down ******************
+    if (m_Operator.getRawButtonPressed(kXboxButtonRB)){
+      System.out.println("Right Trigger Pulled ");
+      gripAngleMotor.set(-1.0);
+    }
+    else if (m_Operator.getRawButtonReleased(kXboxButtonRB)) {
+      gripAngleMotor.stopMotor();
+    }
+    // ********************* Gripper Motor Up *******************
+    if (m_Operator.getRawButtonPressed(kXboxButtonLB)){
+      System.out.println("Left Trigger Pulled");
+      gripAngleMotor.set(1.0);
+    }
+    else if (m_Operator.getRawButtonReleased(kXboxButtonLB)){
+      gripAngleMotor.stopMotor();
+    }
+
+  }
+  /**
+   * When in teleop this function is called periodicly
+   */
+  @Override
+  public void teleopPeriodic() {
+    // Need to come up with a way to tone down the joysticks
+
+    // If I did this right, this should allow for direction of travel to be set by using the left joystick
+    // while the rotation of the robot is set by the right stick on the controller.
+    m_robotDrive.driveCartesian(m_Driver.getRawAxis(0), 
+                                -m_Driver.getRawAxis(1), 
+                                m_Driver.getRawAxis(2));
+
+    /* m_robotDrive.driveCartesian(m_stick.SmoothAxis(m_Driver.getRawAxis(0)), 
+                                m_stick.SmoothAxis(m_Driver.getRawAxis(1)), 
+                                m_stick.SmoothAxis(m_Driver.getRawAxis(4)));
+    */
+     //SmartDashboard.putNumber("Gyro:", MyGyro.getAngle());    
+                                
+    // ***************** Open Grabber *****************
+    if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
+      System.out.println("Oper X button pressed, Grabber OPEN!");
+      myGrabber.set(DoubleSolenoid.Value.kForward);
+    }
+
+    // *************** Close Grabber ****************
+    if (m_Operator.getRawButtonPressed(kXboxButtonB)) {
+      System.out.println("Oper B button pressed, Grabber CLOSE!");
+      myGrabber.set(DoubleSolenoid.Value.kReverse);
+    }   
+
+    // ************* Move TABLE forward *******************
+    if (m_Driver.getRawButtonPressed(5)) {
+      myTable.set(Value.kForward);
+    }
+    // ************* Move TABLE backward ******************
+    if (m_Driver.getRawButtonPressed(6)) {
       myTable.set(Value.kReverse);
     }
 
