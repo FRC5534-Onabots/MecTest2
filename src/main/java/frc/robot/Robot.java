@@ -202,7 +202,7 @@ public class Robot extends TimedRobot {
     // *************** Move Elevator 2 UP/DOwn *************
     if (m_Operator.getY(Hand.kRight) != 0) {
       //Going Up
-      elev2Motor.set(m_Operator.getY(Hand.kRight);  
+      elev2Motor.set(m_Operator.getY(Hand.kRight));  
     }
     else if (m_Operator.getY(Hand.kRight) == 0) {
       elev2Motor.stopMotor();
@@ -210,7 +210,7 @@ public class Robot extends TimedRobot {
 
 
     // ********************* Gripper Motor Down ******************
-    if (m_Operator.getBumperPressed(Hand.kRight){
+    if (m_Operator.getBumperPressed(Hand.kRight)){
       // System.out.println("Right Trigger Pulled ");
       gripAngleMotor.set(-1.0);
     }
@@ -222,7 +222,7 @@ public class Robot extends TimedRobot {
       // System.out.println("Left Trigger Pulled");
       gripAngleMotor.set(1.0);
     }
-    else if (m_Operator.getBumperReleased(Hand.kLeft){
+    else if (m_Operator.getBumperReleased(Hand.kLeft)){
       gripAngleMotor.stopMotor();
     }
 
