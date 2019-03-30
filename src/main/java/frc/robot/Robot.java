@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
  * This is a demo program showing how to use Mecanum control with the RobotDrive
@@ -50,27 +51,29 @@ public class Robot extends TimedRobot {
   private static final int kSlideClose = 1;
 
   // What ever USB port we have the controller plugged into.
-  private static final int kGamePadChannel = 0;
-  private static final int kXboxChannel = 1;
+  private static final int kOperatorController = 0;
+  private static final int kDriverController = 1;
 
   //Lets map out the buttons
-  private static final int kXboxButtonA  = 1;
-  private static final int kXboxButtonB = 2;
-  private static final int kXboxButtonX = 3;
-  private static final int kXboxButtonY = 4;
+  // private static final int kXboxButtonA  = 1;
+  // private static final int kXboxButtonB = 2;
+  // private static final int kXboxButtonX = 3;
+  // private static final int kXboxButtonY = 4;
 
-  private static final int kXboxButtonLB = 5; // <-- Left Button
-  private static final int kXboxButtonRB = 6; // <-- Right Button
-  private static final int kXboxButtonLT = 2; // <-- Left Trigger
-  private static final int kXboxButtonRT = 3; // <-- Right Trigger
+  // private static final int kXboxButtonLB = 5; // <-- Left Button
+  // private static final int kXboxButtonRB = 6; // <-- Right Button
+  // private static final int kXboxButtonLT = 2; // <-- Left Trigger
+  // private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
   private static final double kRampUpRate = 0.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
 
-  private GenericHID m_Driver;
-  private GenericHID m_Operator;
+  // private GenericHID m_Driver;
+  // private GenericHID m_Operator;
+  private XboxController m_Driver;
+  private XboxController m_Operator;
 
   private DeadBand m_stick;
 
@@ -107,8 +110,8 @@ public class Robot extends TimedRobot {
 
     // m_controllerDriver = new Joystick(kJoystickChannel);
     
-    m_Driver = new XboxController(kXboxChannel); // <-- Driver controller
-    m_Operator = new XboxController(kGamePadChannel); //<-- Operator controller
+    m_Driver = new XboxController(kDriverController); // <-- Driver controller
+    m_Operator = new XboxController(kOperatorController); //<-- Operator controller
 
 
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
@@ -160,19 +163,19 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     
-    m_robotDrive.driveCartesian(m_Driver.getRawAxis(0), 
-                                -m_Driver.getRawAxis(1), 
-                                m_Driver.getRawAxis(2));
+    m_robotDrive.driveCartesian(m_Driver.getY(Hand.kLeft), 
+                                -m_Driver.getX(Hand.kLeft), 
+                                m_Driver.getY(Hand.kRight));
     
                                 
     // ***************** Open Grabber *****************
-    if (m_Operator.getRawButtonPressed(kXboxButtonX)) {
+    if (m_Operator.getXButtonPressed()) {
       System.out.println("Oper X button pressed, Grabber OPEN!");
       myGrabber.set(DoubleSolenoid.Value.kForward);
     }
 
     // *************** Close Grabber ****************
-    if (m_Operator.getRawButtonPressed(kXboxButtonB)) {
+    if (m_Operator.getBButtonPressed()) {
       System.out.println("Oper B button pressed, Grabber CLOSE!");
       myGrabber.set(DoubleSolenoid.Value.kReverse);
     }   
