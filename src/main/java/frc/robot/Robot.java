@@ -165,64 +165,64 @@ public class Robot extends TimedRobot {
     
     m_robotDrive.driveCartesian(m_Driver.getY(Hand.kLeft), 
                                 -m_Driver.getX(Hand.kLeft), 
-                                m_Driver.getY(Hand.kRight));
+                                m_Driver.getX(Hand.kRight));
     
                                 
     // ***************** Open Grabber *****************
     if (m_Operator.getXButtonPressed()) {
-      System.out.println("Oper X button pressed, Grabber OPEN!");
+      // System.out.println("Oper X button pressed, Grabber OPEN!");
       myGrabber.set(DoubleSolenoid.Value.kForward);
     }
 
     // *************** Close Grabber ****************
     if (m_Operator.getBButtonPressed()) {
-      System.out.println("Oper B button pressed, Grabber CLOSE!");
+      // System.out.println("Oper B button pressed, Grabber CLOSE!");
       myGrabber.set(DoubleSolenoid.Value.kReverse);
     }   
 
     // ************* Move TABLE forward *******************
-    if (m_Driver.getRawButtonPressed(5)) {
+    if (m_Driver.getYButtonPressed()) {
       myTable.set(Value.kForward);
     }
     // ************* Move TABLE backward ******************
-    if (m_Driver.getRawButtonPressed(6)) {
+    if (m_Driver.getAButtonPressed()) {
       myTable.set(Value.kReverse);
     }
 
     // ************* Move Elevator 1 Up/Down *******************
-    if (m_Operator.getRawAxis(1) != 0){
+    if (m_Operator.getY(Hand.kLeft) != 0){
         //Going Up
-        elev1Motor.set(m_Operator.getRawAxis(1));
+        elev1Motor.set(m_Operator.getY(Hand.kLeft));
     }
-    else if (m_Operator.getRawAxis(1) == 0) {
+    else if (m_Operator.getY(Hand.kLeft) == 0) {
       elev1Motor.stopMotor();
     }
 
 
     // *************** Move Elevator 2 UP/DOwn *************
-    if (m_Operator.getRawAxis(5) != 0) {
+    if (m_Operator.getY(Hand.kRight) != 0) {
       //Going Up
-      elev2Motor.set(m_Operator.getRawAxis(5));  
+      elev2Motor.set(m_Operator.getY(Hand.kRight);  
     }
-    else if (m_Operator.getRawAxis(5) == 0) {
+    else if (m_Operator.getY(Hand.kRight) == 0) {
       elev2Motor.stopMotor();
     }
 
 
     // ********************* Gripper Motor Down ******************
-    if (m_Operator.getRawButtonPressed(kXboxButtonRB)){
-      System.out.println("Right Trigger Pulled ");
+    if (m_Operator.getBumperPressed(Hand.kRight){
+      // System.out.println("Right Trigger Pulled ");
       gripAngleMotor.set(-1.0);
     }
-    else if (m_Operator.getRawButtonReleased(kXboxButtonRB)) {
+    else if (m_Operator.getBumperReleased(Hand.kRight)) {
       gripAngleMotor.stopMotor();
     }
     // ********************* Gripper Motor Up *******************
-    if (m_Operator.getRawButtonPressed(kXboxButtonLB)){
-      System.out.println("Left Trigger Pulled");
+    if (m_Operator.getBumperPressed(Hand.kLeft)){
+      // System.out.println("Left Trigger Pulled");
       gripAngleMotor.set(1.0);
     }
-    else if (m_Operator.getRawButtonReleased(kXboxButtonLB)){
+    else if (m_Operator.getBumperReleased(Hand.kLeft){
       gripAngleMotor.stopMotor();
     }
 
