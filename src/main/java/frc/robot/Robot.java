@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;// <-- Needed for the drive base
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;// <-- gets us access to WPI_TalonSRX which works with wpilibj.drive.Mecanum
@@ -72,6 +73,8 @@ public class Robot extends TimedRobot {
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
 
+  //private Encoder wristMotorPos;
+
   Compressor myCompressor = new Compressor(kPCMPort);
   
   //DoubleSolenoid Grabber = new DoubleSolenoid(kGrabberOpen, kGrabberClose);
@@ -81,6 +84,9 @@ public class Robot extends TimedRobot {
   WPI_VictorSPX elev1Motor = new WPI_VictorSPX(kElev1Motor);
   WPI_VictorSPX elev2Motor = new WPI_VictorSPX(kElev2Motor);
   WPI_VictorSPX gripAngleMotor = new WPI_VictorSPX(7);
+
+  Encoder wristMotorPos = new Encoder(0, 1);
+  double encoderValue = 0; //<-- A place to store what is coming back from the encoder
 
   /**
    * This function if called when the robot boots up.
@@ -104,6 +110,7 @@ public class Robot extends TimedRobot {
     MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
     MyGyro.reset();
 
+    wristMotorPos.reset(); //<-- Reset the encoder to 0
         
     // Invert the left side motors.
     // You may need to change or remove this to match your robot.
@@ -256,6 +263,8 @@ public class Robot extends TimedRobot {
     if (m_Operator.getBumperPressed(Hand.kRight)){
       // System.out.println("Right Trigger Pulled ");
       gripAngleMotor.set(-1.0);
+      encoderValue = wristMotorPos.get();
+      SmartDashboard.putNumber("Wrist Encoder", encoderValue);
     }
     else if (m_Operator.getBumperReleased(Hand.kRight)) {
       gripAngleMotor.stopMotor();
@@ -264,6 +273,8 @@ public class Robot extends TimedRobot {
     if (m_Operator.getBumperPressed(Hand.kLeft)){
       // System.out.println("Left Trigger Pulled");
       gripAngleMotor.set(1.0);
+      encoderValue = wristMotorPos.get();
+      SmartDashboard.putNumber("Wrist Encoder", encoderValue);
     }
     else if (m_Operator.getBumperReleased(Hand.kLeft)){
       gripAngleMotor.stopMotor();
@@ -278,7 +289,29 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic(){
 
-    // Testing out Pneumatic Grabby thing
+          // ********************* Gripper Motor Down ******************
+    if (m_Operator.getBumperPressed(Hand.kRight)){
+      // System.out.println("Right Trigger Pulled ");
+      
+      gripAngleMotor.set(-1.0);
+      encoderValue = wristMotorPos.get();
+      SmartDashboard.putNumber("Wrist Encoder", encoderValue);
+    }
+    else if (m_Operator.getBumperReleased(Hand.kRight)) {
+      gripAngleMotor.stopMotor();
+    }
+    // ********************* Gripper Motor Up *******************
+    if (m_Operator.getBumperPressed(Hand.kLeft)){
+      // System.out.println("Left Trigger Pulled");
+      gripAngleMotor.set(1.0);
+      encoderValue = wristMotorPos.get();
+      SmartDashboard.putNumber("Wrist Encoder", encoderValue);
+    }
+    else if (m_Operator.getBumperReleased(Hand.kLeft)){
+      gripAngleMotor.stopMotor();
+    }
+      //Drive the wrist motor up and down and print out the 
+
   
 
   } // ************************ End of testPeriodic **************************
