@@ -54,24 +54,15 @@ public class Robot extends TimedRobot {
   private static final int kOperatorController = 1;
   private static final int kDriverController = 0;
 
-  //Lets map out the buttons
-  // private static final int kXboxButtonA  = 1;
-  // private static final int kXboxButtonB = 2;
-  // private static final int kXboxButtonX = 3;
-  // private static final int kXboxButtonY = 4;
+ 
 
-  // private static final int kXboxButtonLB = 5; // <-- Left Button
-  // private static final int kXboxButtonRB = 6; // <-- Right Button
-  // private static final int kXboxButtonLT = 2; // <-- Left Trigger
-  // private static final int kXboxButtonRT = 3; // <-- Right Trigger
 
   private static final double kRampUpRate = 0.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
 
-  // private GenericHID m_Driver;
-  // private GenericHID m_Operator;
+  
   private XboxController m_Driver;
   private XboxController m_Operator;
 
@@ -102,29 +93,16 @@ public class Robot extends TimedRobot {
     WPI_TalonSRX frontRightTalonSRX = new WPI_TalonSRX(kFrontRightChannel);
     WPI_TalonSRX rearLeftTalonSRX = new WPI_TalonSRX(kRearLeftChannel);
     WPI_TalonSRX rearRightTalonSRX = new WPI_TalonSRX(kRearRightChannel);
-
-
-
-    //m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
+  
     m_robotDrive = new MecanumDrive(frontLeftTalonSRX, rearLeftTalonSRX, frontRightTalonSRX, rearRightTalonSRX);
 
-    // m_controllerDriver = new Joystick(kJoystickChannel);
-    
     m_Driver = new XboxController(kDriverController); // <-- Driver controller
     m_Operator = new XboxController(kOperatorController); //<-- Operator controller
-
 
     MyGyro = new ADXRS450_Gyro();//This should create a new Gyro object called MyGyro
 
     MyGyro.calibrate(); //Run the init method, to reset and calibrate the gyro.
     MyGyro.reset();
-
-    if (MyGyro.isConnected()){
-      SmartDashboard.putNumber("Gryo", MyGyro.getAngle());
-      if(debug){System.out.println("Gyro is connected");}
-    } else {
-      DriverStation.reportError("Error - No Gyro", MyGyro.isConnected());
-    }
 
         
     // Invert the left side motors.
@@ -151,11 +129,6 @@ public class Robot extends TimedRobot {
     
     myCompressor.enabled();
     
-    //myGrabber.set(DoubleSolenoid.Value.kOff);
-    //myTable.set(Value.kOff);
-
-
-
   
   } // *********************** End of roboInit **********************************
   
