@@ -55,21 +55,18 @@ public class Robot extends TimedRobot {
   private static final int kOperatorController = 1;
   private static final int kDriverController = 0;
 
- 
-
-
   private static final double kRampUpRate = 0.5; // The rate that the motor controller will speed up to full;
   private static final NeutralMode K_MODE = NeutralMode.Brake; // Setting the talons neutralmode to brake
 
   private MecanumDrive m_robotDrive;
 
-  
   private XboxController m_Driver;
   private XboxController m_Operator;
 
   private DeadBand m_stick;
 
   private ADXRS450_Gyro  MyGyro;
+  private double DriveAngle;
   private boolean HasBeenRun = false;
   private boolean debug = true; //Debug flag to print stuff out to the rio logger if set to true
 
@@ -290,9 +287,7 @@ public class Robot extends TimedRobot {
     public void testPeriodic(){
 
           // ********************* Gripper Motor Down ******************
-    if (m_Operator.getBumperPressed(Hand.kRight)){
-      // System.out.println("Right Trigger Pulled ");
-      
+    if (m_Operator.getBumperPressed(Hand.kRight)){     
       gripAngleMotor.set(-1.0);
       encoderValue = wristMotorPos.get();
       SmartDashboard.putNumber("Wrist Encoder", encoderValue);
@@ -302,15 +297,30 @@ public class Robot extends TimedRobot {
     }
     // ********************* Gripper Motor Up *******************
     if (m_Operator.getBumperPressed(Hand.kLeft)){
-      // System.out.println("Left Trigger Pulled");
-      gripAngleMotor.set(1.0);
+       gripAngleMotor.set(1.0);
       encoderValue = wristMotorPos.get();
       SmartDashboard.putNumber("Wrist Encoder", encoderValue);
     }
     else if (m_Operator.getBumperReleased(Hand.kLeft)){
       gripAngleMotor.stopMotor();
     }
-      //Drive the wrist motor up and down and print out the 
+      // Drive the wrist motor up and down and print out the value.  Need to come
+      // up with a useful way to use these values
+
+      // Try to drive the robot locked on an angle
+    SmartDashboard.putNumber("Gyro:",MyGyro.getAngle());
+    DriveAngle = MyGyro.getAngle();
+    // Wonder if I could drive this as drivePolar?
+    if (m_Driver.getTriggerAxis(Hand.kRight) !=0){
+      //m_robotDrive.driveCartesian(m_Driver.getX(Hand.kLeft),
+      //                            m_Driver.getY(Hand.kLeft),
+      //                            0,
+      //                            DriveAngle);
+
+      m_robotDrive.drivePolar(m_Driver.getX(Hand.kLeft), m_Driver.getY(Hand.kLeft), m_Driver.getY(Hand.kRight));
+    } // end if right trigger is pulled.
+
+
 
   
 
